@@ -1,0 +1,46 @@
+<div class="footer">
+    Nové příspěvky se mohou objevit až 10 minut po jejich nahrání<br>
+    Veškeré aktuální příspěvky jsou dostupné na 
+    <a href="https://www.instagram.com/obchoduj.na.krizikovi" target="_blank">@obchoduj.na.krizikovi</a>
+</div>
+<div class="dark-mode-toggle" title="Zapnout Tmavý režim">🌙</div>
+<script>
+    const btn = document.querySelector('div.dark-mode-toggle');
+    const body = document.body;
+    const cards = document.querySelectorAll('a.card');
+    const footer = document.querySelector('div.footer');
+    const links = document.querySelectorAll('a');
+
+    function toggleDarkMode() {
+        btn.classList.toggle('dark-mode');
+        body.classList.toggle('dark-mode');
+        footer.classList.toggle('dark-mode');
+
+        for (const card of cards)
+            card.classList.toggle('dark-mode');
+
+        for (const a of links) {
+            if (!a.href.includes('instagram.com')) {
+                if (btn.classList.contains('dark-mode'))
+                    a.href = a.href + "?darkMode=1";
+                else
+                    a.href = a.href.replace('?darkMode=1', '');
+            }
+        }
+
+        if (btn.classList.contains('dark-mode')) {
+            btn.textContent = '☀️';
+            btn.setAttribute('title', 'Zapnout Světlý režim');
+        } else {
+            btn.textContent = '🌙';
+            btn.setAttribute('title', 'Zapnout Tmavý režim');
+        }
+    }
+    <% if (darkMode) { %>
+    toggleDarkMode();
+    <% } %>
+
+    btn.addEventListener('click', toggleDarkMode);
+</script>
+</body>
+</html>

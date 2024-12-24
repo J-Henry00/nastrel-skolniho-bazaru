@@ -1,0 +1,82 @@
+.postContent {
+    padding: 2rem;
+    gap: 2rem;
+    padding-left: calc(90px + 5vw); /* Dynamically set higher value */
+}
+
+.post {
+    display: grid; /* Change to grid display */
+    grid-template-columns: 1fr 1fr; /* Default to single column for small screens */
+    gap: 20px; /* Space between items */
+    margin: 20px 0;
+}
+
+.post {
+    display: grid; /* Change to grid display */
+    grid-template-columns: 1fr 1fr; /* Two equal columns for image and description */
+    gap: 20px; /* Space between items */
+    margin: 20px 0;
+}
+.post img {
+    border: 5px solid #1e73be; /* Add a border for the frame */
+    background: #1e73be;
+    border-radius: 15px; /* Rounded corners */
+    max-width: 100%; /* Make the image take the full width of its grid cell */
+    height: auto;
+    padding: 5px; /* Add some padding between the image and the border */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+}
+.post-description {
+    max-width: 80%; /* Allow full width in the grid layout */
+    font-size: 1.3rem;
+}
+.visit-button {
+    background-color: #1e73be;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    align-self: start;
+    margin-top: 10px;
+    transition: transform 0.2s;
+}
+.visit-button:hover {
+    background-color: #155a8a; /* Darker blue on hover */
+    transition: transform 0.2s;
+    transform: translateY(-5px);
+}
+.home-button {
+    background-color: #007a2f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    align-self: start;
+    margin-top: 10px;
+    transition: transform 0.2s;
+}
+.home-button:hover {
+    background-color: #00471b;
+    transition: transform 0.2s;
+    transform: translateY(-5px);
+}
+
+@media (max-width: 768px) { /* Adjust for smaller screens */
+    .postContent {
+        display: flex;
+        padding-left: calc(5px + 5vw); /* Dynamically set higher value */
+    }
+    .post {
+        display: flex;
+        flex-direction: column;
+    }
+    .post-description {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,20 @@
+    <%- include('partials/header') %>
+    
+    
+    <div class="content">
+        <% if (data.length === 0) { %>
+            <p style="color: red;">Chyba při načítání příspěvků</p>
+            <% } else { %>
+            <% data.forEach(function(post, i) { %>
+                <a href="/post/<%= i %>" class="card">
+                    <img src="<%= post.image %>" alt="Post image">
+                    <div class="card-description">
+                        <p><%= post.description %></p>
+                    </div>
+                </a>
+            <% }); %>
+        <% } %>
+    </div>
+
+    
+    <%- include('partials/footer') %>
