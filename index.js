@@ -9,22 +9,7 @@ const app = express();
 // custom tools
 const api = require('./api');
 const cache = require('./cache');
-function saveBackupData(data) {
-    const backupPath = path.join(__dirname, 'backups', 'data.json');
 
-    fs.writeFileSync(backupPath, JSON.stringify(data, null, 2));
-    return;
-}
-function loadBackupData() {
-    const backupPath = path.join(__dirname, 'backups', 'data.json');
-
-    return JSON.parse(fs.readFileSync(backupPath));
-}
-
-const backups = {
-    getLast: () => JSON.parse(fs.readFileSync(path.join(__dirname, 'backups', 'backup.json'))).lastBackup,
-    setLast: () => fs.writeFileSync(path.join(__dirname, 'backups', 'backup.json'), JSON.stringify({lastBackup: Date.now()}))
-}
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -134,37 +119,26 @@ const examplePosts = [
     }
 ];
 
+function loadData() {
+    const dataPath = path.join(__dirname, 'backups', 'data.json');
+
+    return JSON.parse(fs.readFileSync(dataPath));
+}
+
+setInterval(async () => {
+    await api();
+}, 10 * 60 * 1000); // Run every 10 minutes
+
 
 app.get('/', async (req, res) => {
-    let data = loadBackupData();
-    const lastBackupTime = backups.getLast();
-    const currentTime = Date.now();
-    
-    if (currentTime - lastBackupTime > 10 * 60 * 1000) { // Check if last backup is more than 10 minutes old
-        let data = await api(); // Fetch new data
-        if (data.length != 0) {
-            saveBackupData(data); // Save new data
-            backups.setLast(); // Update last backup time
-        }
-    }
+    let data = loadData();
 
     res.render('index', { data, instance: 'homepage', darkMode: req.query.darkMode == '1' });
 
 });
 
 app.get('/post/:id', async (req, res) => {
-    let data = loadBackupData()[req.params.id];
-    const lastBackupTime = backups.getLast();
-    const currentTime = Date.now();
-    
-    if (currentTime - lastBackupTime > 10 * 60 * 1000) { // Check if last backup is more than 10 minutes old
-        let data = await api(); // Fetch new data
-        if (data.length != 0) {
-            saveBackupData(data); // Save new data
-            backups.setLast(); // Update last backup time
-        }
-        data = data[req.params.id];
-    }
+    var data = loadData()[req.params.id];
 
     res.render('post', { data, instance: 'post', darkMode: req.query.darkMode == '1' })
 });
