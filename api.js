@@ -23,6 +23,7 @@ async function getRawData() {
     const browser = await puppeteer.launch(browserLaunchParameters);
     try {
         const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
         
         log("Opening obchoduj.na.krizikovi's profile...");
         await page.goto('https://www.instagram.com/obchoduj.na.krizikovi');
@@ -98,6 +99,7 @@ async function getData() {
     const browser = await puppeteer.launch(browserLaunchParameters);
     try {
         const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
 
         for (const p of rawData) {
             log("Processing: " + p.url);
