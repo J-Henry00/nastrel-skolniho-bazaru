@@ -1,21 +1,20 @@
 <%- include('partials/header') %>
-    
-    
+
 <div class="postContent">
-
-<% if (data != null) { %>
-    <div class="post">
-        <div class="post-description">
-            <a href="/" class="home-button">Jít domů</a>
-            <p><%= data.description %></p>
-            <a href="<%= data.url %>" class="visit-button" target="_blank">Zjistit více!</a>
-        </div>
-        <img src="<%= data.image %>" alt="Post image">
-    </div>
-<% } else { %>
-    <p style="color: red;">Příspěvek nebyl nalezen.</p>
-<% } %>
+	<% if (data != null) { %>
+	<div class="post">
+		<div class="post-description">
+			<a href="/" class="home-button">Jít domů</a>
+			<p><%= data.description %></p>
+			<a href="<%= data.url %>" class="visit-button" target="_blank"
+				>Zjistit více!</a
+			>
+		</div>
+		<img src="<%= data.image %>" alt="Post image" />
+	</div>
+	<% } else { %>
+	<p style="color: red">Příspěvek nebyl nalezen.</p>
+	<% } %>
 </div>
-
 
 <%- include('partials/footer') %>

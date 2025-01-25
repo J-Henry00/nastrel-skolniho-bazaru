@@ -1,6 +1,5 @@
 <div class="footer">
-    Nové příspěvky se mohou objevit až 10 minut po jejich nahrání<br>
-    Veškeré aktuální příspěvky jsou dostupné na 
+    Nové příspěvky jsou dostupné ihned na<br>
     <a href="https://www.instagram.com/obchoduj.na.krizikovi" target="_blank">@obchoduj.na.krizikovi</a>
 </div>
 <div class="dark-mode-toggle" title="Zapnout Tmavý režim">🌙</div>
@@ -19,26 +18,32 @@
         for (const card of cards)
             card.classList.toggle('dark-mode');
 
-        for (const a of links) {
-            if (!a.href.includes('instagram.com')) {
-                if (btn.classList.contains('dark-mode'))
-                    a.href = a.href + "?darkMode=1";
-                else
-                    a.href = a.href.replace('?darkMode=1', '');
-            }
-        }
-
         if (btn.classList.contains('dark-mode')) {
             btn.textContent = '☀️';
             btn.setAttribute('title', 'Zapnout Světlý režim');
+            setDarkModeState('true');
+
         } else {
             btn.textContent = '🌙';
             btn.setAttribute('title', 'Zapnout Tmavý režim');
+            setDarkModeState('false');
         }
     }
-    <% if (darkMode) { %>
-    toggleDarkMode();
-    <% } %>
+
+    if (localStorage.getItem('isDarkModeEnabled') == null)
+        localStorage.setItem('isDarkModeEnabled', 'false');
+
+    function setDarkModeState(state) {
+        localStorage.setItem('isDarkModeEnabled', state);
+        
+        return;
+    }
+
+    function getDarkModeState() {
+        return localStorage.getItem('isDarkModeEnabled');
+    }
+    
+    getDarkModeState() == 'true' && toggleDarkMode();
 
     btn.addEventListener('click', toggleDarkMode);
 </script>
