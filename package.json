@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "installFirefox": "puppeteer browsers install firefox",
+    "installChrome": "puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +21,7 @@
     "memory-cache": "^0.2.0",
     "path": "^0.12.7",
     "puppeteer": "^23.11.1",
-    "puppeteer-core": "^10.1.0"
+    "puppeteer-core": "^23.11.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

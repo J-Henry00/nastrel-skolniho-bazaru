@@ -1,20 +1,14 @@
 require('dotenv').config();
 
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const fetch = require('node-fetch');
 const app = express();
 
 // custom tools
-const api = require('./api');
-const cache = require('./cache');
+const logger = require('./logger');
 
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
-app.use('/', express.static('./public'));
 
 const examplePosts = [
     {
@@ -23,7 +17,7 @@ const examplePosts = [
         url: "https://instagram.com/p/example1"
     },
     {
-        image: "https://fastly.picsum.photos/id/980/500/500.jpg?hmac=xxuslS3B6e6w4Bi3zur1mfICYM9HBN9Q1FvzYvG8mZ0", 
+        image: "https://fastly.picsum.photos/id/980/500/500.jpg?hmac=xxuslS3B6e6w4Bi3zur1mfICYM9HBN9Q1FvzYvG8mZ0",
         description: "Kvalitní školní batoh značky Nike, černý, málo používaný. Mnoho kapes, ergonomická záda. Cena 400 Kč. Tento batoh je ideální pro každodenní použití, ať už do školy nebo na volný čas. Je dostatečně prostorný pro všechny školní potřeby a navíc vypadá stylově.",
         url: "https://instagram.com/p/example2"
     },
@@ -73,7 +67,7 @@ const examplePosts = [
         url: "https://instagram.com/p/example1"
     },
     {
-        image: "https://fastly.picsum.photos/id/980/500/500.jpg?hmac=xxuslS3B6e6w4Bi3zur1mfICYM9HBN9Q1FvzYvG8mZ0", 
+        image: "https://fastly.picsum.photos/id/980/500/500.jpg?hmac=xxuslS3B6e6w4Bi3zur1mfICYM9HBN9Q1FvzYvG8mZ0",
         description: "Kvalitní školní batoh značky Nike, černý, málo používaný. Mnoho kapes, ergonomická záda. Cena 400 Kč. Tento batoh je ideální pro každodenní použití, ať už do školy nebo na volný čas. Je dostatečně prostorný pro všechny školní potřeby a navíc vypadá stylově.",
         url: "https://instagram.com/p/example2"
     },
@@ -120,14 +114,9 @@ const examplePosts = [
 ];
 
 function loadData() {
-    const dataPath = path.join(__dirname, 'backups', 'data.json');
 
-    return JSON.parse(fs.readFileSync(dataPath));
+    return examplePosts;
 }
-
-setInterval(async () => {
-    await api();
-}, 10 * 60 * 1000); // Run every 10 minutes
 
 
 app.get('/', async (req, res) => {
@@ -143,34 +132,9 @@ app.get('/post/:id', async (req, res) => {
     res.render('post', { data, instance: 'post', darkMode: req.query.darkMode == '1' })
 });
 
-app.get('/image/*', async (req, res) => {
-    let imagePath = "https://scontent-prg1-1.cdninstagram.com/v/" + req.path.replace('/image/', '');
-    const queryParams = req.url.split('?')[1];
-    if (queryParams) {
-        imagePath += '?' + queryParams;
-    }    
-
-    fetch(imagePath)
-        .then(response => {
-            if (!response.ok) {
-                console.error(response);
-                throw new Error('Network response was not ok');
-                
-            }
-            return response.buffer();
-        })
-        .then(buffer => {
-            res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-            res.end(buffer);
-            return;
-        })
-        .catch(error => {
-            console.error('Error fetching image:', error);
-            res.writeHead(500);
-            res.end('Error fetching image');
-            return;
-        });
-});
+app.get('/admin', (req, res) => res.sendStatus(403));
+app.get('/o-nas', (req, res) => res.sendStatus(403));
+app.get('/kontakt', (req, res) => res.sendStatus(403));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+app.listen(PORT, () => logger.log(`Listening on port ${PORT}`));

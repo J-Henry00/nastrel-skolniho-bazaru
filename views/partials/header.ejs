@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    <title>Školský Bazar</title>
+    <title>Obchoduj na Křižíkovi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Školský Bazar - Platforma pro prodej a nákup školských potřeb na Křižíku">
     <meta name="keywords" content="bazar, škola, školské potřeby, učebnice, prodej">
@@ -11,13 +12,16 @@
     <meta property="og:title" content="Školský Bazar">
     <meta property="og:description" content="Platforma pre predaj a nákup školských potrieb">
     <meta property="og:type" content="website">
-
-    <link rel="stylesheet" href="/styles.css">
-<% if (instance === 'post') { %>
-    <link rel="stylesheet" href="/postStyles.css">
-<% } %>
 </head>
-<body>
-    <div class="header">
-        <h1><a href="/" style="color: white; text-decoration: none;">Bazar na Křižíkovi</a></h1>
-    </div>
+<%- include('css') %>
+
+
+    <body>
+        <div class="header">
+            <h1><a href="/" style="color: white; text-decoration: none;">Obchoduj na Křižíkovi</a></h1>
+            <!-- <ul>
+            <li class="nav-bar-item" onclick="window.location.href='/kontakt'">Kontakt</li>
+            <li class="nav-bar-item" onclick="window.location.href='/o-nas'">O nás</li>
+            <li class="nav-bar-item" onclick="window.location.href='/admin'">Admin</li>
+        </ul> -->
+        </div>
