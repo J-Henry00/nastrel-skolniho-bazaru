@@ -1,16 +1,54 @@
-<%- include('partials/header') %>
-	<div class="login-container">
-		<h2>Přihlášení</h2>
-		<form action="/admin" method="POST" enctype="application/x-www-form-urlencoded">
-			<div class="form-group">
-				<label for="username">Uživatel:</label>
-				<input type="text" id="username" name="username" placeholder="Jméno" required />
-			</div>
-			<div class="form-group">
-				<label for="password">Heslo:</label>
-				<input type="password" id="password" name="password" placeholder="Heslo" required />
-			</div>
-			<button type="submit">Přihlásit se</button>
-		</form>
-	</div>
-	<%- include('partials/footer') %>
+<%- include('partials/header') %> <% if (instance == "admin_LogIn" || instance
+== "admin_LogIn_failed") { %>
+<div class="login-container">
+	<h2>Přihlášení</h2>
+	<form
+		action="/admin"
+		method="POST"
+		enctype="application/x-www-form-urlencoded">
+		<div class="form-group">
+			<label for="username">Uživatel:</label>
+			<input
+				type="text"
+				id="username"
+				name="username"
+				placeholder="Jméno"
+				required />
+		</div>
+		<div class="form-group">
+			<label for="password">Heslo:</label>
+			<input
+				type="password"
+				id="password"
+				name="password"
+				placeholder="Heslo"
+				required />
+		</div>
+		<button type="submit">Přihlásit se</button>
+		<% if (allowUserRegistration) { %>
+		<a href="/registrace" style="color: white; margin-top: 3px">Registrovat se</a>
+		<% } %>
+	</form>
+</div>
+<% if (instance == "admin_LogIn_failed") { %>
+<h1 style="display: flex; justify-content: center; color: red">
+	Přihlášení se nezdařilo
+</h1>
+<% } %> <% } else if (instance == "admin_LoggedIn") { %>
+<form action="/admin/features" method="post" class="feature-container">
+	<main>
+		<label
+			for="input-enableUserRegistration"
+			title="Povolit registraci uživatelů">
+			enableUserRegistration
+		</label>
+		<input
+			type="checkbox"
+			name="allowUserRegistration"
+			id="input-enableUserRegistration"
+			<% if (allowUserRegistration) { %>checked<% } %> />
+	</main>
+
+	<button type="submit">Uložit</button>
+</form>
+<% } %> <%- include('partials/footer') %>

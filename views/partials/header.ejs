@@ -55,14 +55,8 @@
 					Kontakt
 				</li>
 				<li class="nav-bar-item" onclick="window.location.href='/admin'">
-					<% if(!user) { %>
+					<% if (user) { %>Admin<% } else { %>Přihlásit se<% } %>
 				</li>
-				<li class="nav-bar-item" onclick="window.location.href='/admin'">
-					Přihlásit se
-				</li>
-				<%} else { %>
-				<li><%= user %></li>
-				<%} %>
 			</ul>
 		</div>
 	</body>
