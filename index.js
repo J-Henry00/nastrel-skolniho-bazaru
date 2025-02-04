@@ -1,10 +1,27 @@
 require('dotenv').config();
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
 const app = express();
 
 // custom tools
 const logger = require('./logger');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+	session({
+		secret: 'gfhgiujewrghgherhtrh5656tr4h9tr4h89tr4h89tr4jhytrjyt4j89yt4',
+		cookie: {
+			maxAge: 1000 * 60,
+			secure: false,
+		},
+		resave: false,
+		saveUninitialized: false,
+	})
+);
+app.use('/', express.static(__dirname + '/public'));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
@@ -162,6 +179,7 @@ app.get('/', async (req, res) => {
 	res.render('index', {
 		data,
 		instance: 'homepage',
+		user: req.session.user,
 	});
 });
 
@@ -171,12 +189,52 @@ app.get('/post/:id', async (req, res) => {
 	res.render('post', {
 		data,
 		instance: 'post',
+		user: req.session.user,
 	});
 });
 
-app.get('/admin', (req, res) => res.sendStatus(403));
-app.get('/o-nas', (req, res) => res.sendStatus(403));
-app.get('/kontakt', (req, res) => res.sendStatus(403));
+app.get('/o-nas', (req, res) => {
+	res.render('about', {
+		instance: 'about',
+		user: req.session.user,
+	});
+});
+app.get('/kontakt', (req, res) => {
+	res.render('contact', {
+		instance: 'contact',
+		user: req.session.user,
+	});
+});
+app.get('/admin', (req, res) => {
+	res.render('admin', {
+		instance: 'admin_LogIn',
+		user: req.session.user,
+	});
+});
+app.post('/admin', (req, res) => {
+	if (
+		!(
+			req.body.username == process.env.X_ADMIN &&
+			req.body.password == process.env.X_ADMIN_PW
+		)
+	)
+		return res.sendStatus(401);
+
+	req.session.user = 'admin';
+	return res.redirect('/');
+});
+app.get('/pridat', (req, res) => res.render('pridat'));
+app.get('/odhlasit-se', (req, res) => {
+	if (req.session.user)
+		req.session.destroy((err) => {
+			if (err) {
+				console.error(err);
+				return res.sendStatus(500);
+			}
+			return res.redirect('/');
+		});
+	else return res.redirect('/');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.log(`Listening on port ${PORT}`));

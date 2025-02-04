@@ -17,19 +17,53 @@
 			property="og:description"
 			content="Platforma pre predaj a nákup školských potrieb" />
 		<meta property="og:type" content="website" />
+		<meta property="og:image" content="/favicon.ico" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<%- include('css') %>
 	</head>
 
 	<body>
 		<div class="header">
-			<h1>
-				<a href="/" style="color: white; text-decoration: none"
-					>Obchoduj na Křižíkovi</a
-				>
+			<h1 style="display: flex; align-items: center">
+				<a
+					href="/"
+					style="
+						color: white;
+						text-decoration: none;
+						display: flex;
+						align-items: center;
+					">
+					<img
+						src="/logo.png"
+						style="height: 2.3rem; margin-right: 0.5rem" />Obchoduj na Křižíkovi
+				</a>
 			</h1>
-			<!-- <ul>
-            <li class="nav-bar-item" onclick="window.location.href='/kontakt'">Kontakt</li>
-            <li class="nav-bar-item" onclick="window.location.href='/o-nas'">O nás</li>
-            <li class="nav-bar-item" onclick="window.location.href='/admin'">Admin</li>
-        </ul> -->
+			<ul>
+				<% if (user) { %>
+				<li class="nav-bar-item" onclick="window.location.href='/odhlasit-se'">
+					Odhlásit se
+				</li>
+				<li class="nav-bar-item" onclick="window.location.href='/pridat'">
+					Přidat položku
+				</li>
+				<li>|</li>
+				<% } %>
+				<li class="nav-bar-item" onclick="window.location.href='/o-nas'">
+					O nás
+				</li>
+				<li class="nav-bar-item" onclick="window.location.href='/kontakt'">
+					Kontakt
+				</li>
+				<li class="nav-bar-item" onclick="window.location.href='/admin'">
+					<% if(!user) { %>
+				</li>
+				<li class="nav-bar-item" onclick="window.location.href='/admin'">
+					Přihlásit se
+				</li>
+				<%} else { %>
+				<li><%= user %></li>
+				<%} %>
+			</ul>
 		</div>
+	</body>
+</html>
