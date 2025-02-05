@@ -18,7 +18,7 @@ function addUser(name, password, email, instagram, role = 'guest') {
 		}
 	}
 
-	// password = pw.encodePassword(password);
+	password = pw.encrypt(password);
 
 	var user = {
 		name,
@@ -38,8 +38,7 @@ function authorizeUser(name, password) {
 	var user = db.find((u) => u.name == name);
 	if (!user) return;
 
-	// return password == pw.decodePassword(user.pw);
-	return password == user.pw;
+	return password == pw.decrypt(user.pw);
 }
 
 module.exports = {

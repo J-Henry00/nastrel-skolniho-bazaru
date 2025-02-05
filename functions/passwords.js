@@ -1,27 +1,33 @@
 const crypto = require('crypto');
 
 const algorithm = 'aes-256-cbc';
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
 
-function encodePassword(password) {
-	let cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
-	let encrypted = cipher.update(password);
-	encrypted = Buffer.concat([encrypted, cipher.final()]);
-	return iv.toString('hex') + ':' + encrypted.toString('hex');
+const key = Buffer.from(process.env.ENC_KEY, 'hex');
+
+function encrypt(password) {
+	const iv = crypto.randomBytes(16);
+	const cipher = crypto.createCipheriv(algorithm, key, iv);
+
+	let encryptedPw = cipher.update(password, 'utf8', 'hex');
+	encryptedPw += cipher.final('hex');
+
+	return `${iv.toString('hex')}:${encryptedPw}`;
 }
 
-function decodePassword(encryptedPassword) {
-	let textParts = encryptedPassword.split(':');
-	let iv = Buffer.from(textParts.shift(), 'hex');
-	let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-	let decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
-	let decrypted = decipher.update(encryptedText);
-	decrypted = Buffer.concat([decrypted, decipher.final()]);
-	return decrypted.toString();
+function decrypt(encryptedData) {
+	const parts = encryptedData.split(':');
+	const iv = Buffer.from(parts.shift(), 'hex');
+	const encryptedPw = parts.join(':');
+
+	const decipher = crypto.createDecipheriv(algorithm, key, iv);
+
+	let password = decipher.update(encryptedPw, 'hex', 'utf8');
+	password += decipher.final('utf8');
+
+	return password;
 }
 
 module.exports = {
-	encodePassword,
-	decodePassword,
+	encrypt,
+	decrypt,
 };

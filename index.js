@@ -87,7 +87,6 @@ app.post('/admin', (req, res) => {
 		allowUserRegistration: features.getOne('allowUserRegistration'),
 	});
 });
-app.get('/pridat', (req, res) => res.render('pridat'));
 app.get('/odhlasit-se', (req, res) => {
 	if (req.session.user)
 		req.session.destroy((err) => {
@@ -121,6 +120,14 @@ app.post('/registrace', (req, res) => {
 	users.addUser(username, password, email, instagram);
 	res.redirect('/admin');
 });
+app.get('/pridat', (req, res) =>
+	req.session.user
+		? res.render('pridat', {
+				instance: 'addPost',
+				user: req.session.user,
+		  })
+		: res.redirect('/')
+);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.log(`Listening on port ${PORT}`));
