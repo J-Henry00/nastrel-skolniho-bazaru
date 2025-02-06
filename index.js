@@ -70,6 +70,7 @@ app.get('/admin', (req, res) => {
 		instance: req.session.user ? 'admin_LoggedIn' : 'admin_LogIn',
 		user: req.session.user,
 		allowUserRegistration: features.getOne('allowUserRegistration'),
+		allowPostAddition: features.getOne('allowPostAddition'),
 	});
 });
 app.post('/admin', (req, res) => {
@@ -78,6 +79,7 @@ app.post('/admin', (req, res) => {
 			instance: 'admin_LogIn_failed',
 			user: req.session.user,
 			allowUserRegistration: features.getOne('allowUserRegistration'),
+			allowPostAddition: features.getOne('allowPostAddition'),
 		});
 
 	req.session.user = req.body.username;
@@ -85,6 +87,7 @@ app.post('/admin', (req, res) => {
 		instance: 'admin_LoggedIn',
 		user: req.session.user,
 		allowUserRegistration: features.getOne('allowUserRegistration'),
+		allowPostAddition: features.getOne('allowPostAddition'),
 	});
 });
 app.get('/odhlasit-se', (req, res) => {
@@ -101,6 +104,7 @@ app.get('/odhlasit-se', (req, res) => {
 app.post('/admin/features', (req, res) => {
 	const data = {
 		allowUserRegistration: req.body.allowUserRegistration == 'on',
+		allowPostAddition: req.body.allowPostAddition == 'on',
 	};
 
 	features.setMultiple(data);
@@ -125,9 +129,13 @@ app.get('/pridat', (req, res) =>
 		? res.render('pridat', {
 				instance: 'addPost',
 				user: req.session.user,
+				allowPostAddition: features.getOne('allowPostAddition'),
 		  })
 		: res.redirect('/')
 );
+app.post('/pridat', (req, res) => {
+	return res.sendStatus(401);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.log(`Listening on port ${PORT}`));

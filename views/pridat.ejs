@@ -1,6 +1,103 @@
-<%- include('partials/header') %>
-<div class="content">
-	<h1>Maintenance</h1>
-	<p>We are currently performing maintenance. Please check back later.</p>
+<%- include('partials/header') %> <% if (allowPostAddition) { %>
+<style>
+	.register-container {
+		margin-top: 10vh;
+		max-width: 250px;
+		padding: 20px;
+		border: none;
+		border-radius: 5px;
+		/* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.register-container h2 {
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	.register-container > form {
+		width: 100%;
+		max-width: 100%;
+		display: flex;
+		align-items: center;
+		align-content: center;
+		flex-direction: column;
+	}
+
+	.form-group {
+		margin-bottom: 15px;
+	}
+
+	.form-group label {
+		display: block;
+		margin-bottom: 5px;
+	}
+
+	.form-group input {
+		width: 100%;
+		max-width: 100%;
+		height: 30px;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		outline: none;
+	}
+
+	button {
+		width: 50%;
+		padding: 10px;
+		background-color: #1e73be;
+		color: #fff;
+		border: none;
+		border-radius: 3px;
+		cursor: pointer;
+		transition: 0.2s;
+	}
+
+	button:hover {
+		background-color: #0056b3;
+		transition: 0.2s;
+	}
+</style>
+<div class="register-container">
+	<h2>Přidat položku</h2>
+	<form action="/pridat" method="POST" enctype="multipart/form-data">
+		<div class="form-group">
+			<label for="username">Stručný název:</label>
+			<input
+				type="text"
+				id="title"
+				name="title"
+				placeholder="Stručný název"
+				required />
+		</div>
+		<div class="form-group">
+			<label for="password">Popis:</label>
+			<textarea
+				type="text"
+				id="description"
+				name="description"
+				placeholder="Popis"
+				required></textarea>
+		</div>
+		<div class="form-group">
+			<label for="username">Odkaz na Instagram:</label>
+			<input
+				type="url"
+				id="instagram"
+				name="instagram"
+				placeholder="Odkaz na příspěvěk (např. https://instagram.com/p/g4fd6)"
+				required />
+		</div>
+		<div class="form-group">
+			<label for="username">Obrázky:</label>
+			<input type="file" id="images" name="images" multiple required />
+		</div>
+		<button type="submit">Přidat</button>
+	</form>
 </div>
-<%- include('partials/footer') %>
+<% } else { %>
+<h1 style="display: flex; justify-content: center; align-items: center">
+	Přidávání příspěvků je vypnuto
+</h1>
+<% } %> <%- include('partials/footer') %>

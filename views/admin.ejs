@@ -37,16 +37,31 @@
 <% } %> <% } else if (instance == "admin_LoggedIn") { %>
 <form action="/admin/features" method="post" class="feature-container">
 	<main>
-		<label
+		<div>
+
+			<label
 			for="input-enableUserRegistration"
 			title="Povolit registraci uživatelů">
 			enableUserRegistration
 		</label>
 		<input
-			type="checkbox"
-			name="allowUserRegistration"
-			id="input-enableUserRegistration"
-			<% if (allowUserRegistration) { %>checked<% } %> />
+		type="checkbox"
+		name="allowUserRegistration"
+		id="input-enableUserRegistration"
+		<% if (allowUserRegistration) { %>checked<% } %> />
+	</div><div>
+
+		<label
+		for="input-enableUserRegistration"
+		title="Povolit registraci uživatelů">
+		allowPostAddition
+	</label>
+	<input
+	type="checkbox"
+	name="allowPostAddition"
+	id="input-allowPostAddition"
+	<% if (allowPostAddition) { %>checked<% } %> />
+	</div>
 	</main>
 
 	<button type="submit">Uložit</button>

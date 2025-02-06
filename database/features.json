@@ -1,3 +1,4 @@
 {
-  "allowUserRegistration": false
+  "allowUserRegistration": false,
+  "allowPostAddition": true
 }
