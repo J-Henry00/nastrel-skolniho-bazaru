@@ -1,15 +1,38 @@
 require('dotenv').config();
 
 const express = require('express');
+
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const multer = require('multer');
+
 const app = express();
+
+const fs = require('fs');
+const path = require('path');
+
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+	fs.mkdirSync(uploadsDir);
+}
 
 // custom tools
 const logger = require('./logger');
 const posts = require('./functions/posts');
 const features = require('./functions/features');
 const users = require('./functions/users');
+const storage = multer.diskStorage({
+	destination: (req, file, cb) =>
+		cb(null, `${require('path').join(__dirname, 'uploads')}`),
+	filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
+});
+const upload = multer({ storage });
+const checkUserSession = (req, res, next) => {
+	if (!req.session.user) {
+		return res.redirect('/');
+	}
+	next();
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,13 +48,10 @@ app.use(
 	})
 );
 app.use('/', express.static(__dirname + '/public'));
+app.use('/images', express.static(__dirname + '/uploads'));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
-function loadData() {
-	return examplePosts;
-}
 
 app.get('/', async (req, res) => {
 	var data = posts.getData();
@@ -82,7 +102,7 @@ app.post('/admin', (req, res) => {
 			allowPostAddition: features.getOne('allowPostAddition'),
 		});
 
-	req.session.user = req.body.username;
+	req.session.user = users.getUser(req.body.username);
 	res.render('admin', {
 		instance: 'admin_LoggedIn',
 		user: req.session.user,
@@ -90,18 +110,17 @@ app.post('/admin', (req, res) => {
 		allowPostAddition: features.getOne('allowPostAddition'),
 	});
 });
-app.get('/odhlasit-se', (req, res) => {
-	if (req.session.user)
-		req.session.destroy((err) => {
-			if (err) {
-				console.error(err);
-				return res.sendStatus(500);
-			}
-			return res.redirect('/admin');
-		});
-	else return res.redirect('/');
+app.get('/odhlasit-se', checkUserSession, (req, res) => {
+	req.session.destroy((err) => {
+		if (err) {
+			console.error(err);
+			return res.sendStatus(500);
+		}
+		return res.redirect('/admin');
+	});
 });
-app.post('/admin/features', (req, res) => {
+app.post('/admin/features', checkUserSession, (req, res) => {
+	if (req.session.user.role != 'admin') return res.redirect('/');
 	const data = {
 		allowUserRegistration: req.body.allowUserRegistration == 'on',
 		allowPostAddition: req.body.allowPostAddition == 'on',
@@ -124,8 +143,8 @@ app.post('/registrace', (req, res) => {
 	users.addUser(username, password, email, instagram);
 	res.redirect('/admin');
 });
-app.get('/pridat', (req, res) =>
-	req.session.user
+app.get('/pridat', checkUserSession, (req, res) =>
+	req.session.user.role != 'guest'
 		? res.render('pridat', {
 				instance: 'addPost',
 				user: req.session.user,
@@ -133,9 +152,44 @@ app.get('/pridat', (req, res) =>
 		  })
 		: res.redirect('/')
 );
-app.post('/pridat', (req, res) => {
-	return res.sendStatus(401);
-});
+
+app.post(
+	'/pridat',
+	checkUserSession,
+	(req, res, next) => {
+		if (req.session.user.role == 'guest') {
+			return res.redirect('/');
+		}
+		next();
+	},
+	upload.array('images'),
+	(req, res) => {
+		let data = {
+			description: req.body.description,
+			url: req.body.instagram,
+			images: [],
+		};
+		req.files.forEach((img) => {
+			data.images.push(`/images/${img.filename}`);
+		});
+		var id = posts.addOne(data);
+		return res.redirect(`/post/${id}`);
+	}
+);
+app.get(
+	'/odstranit/:id',
+	checkUserSession,
+	(req, res, next) => {
+		if (req.session.user.role == 'guest') {
+			return res.redirect('/');
+		}
+		next();
+	},
+	(req, res) => {
+		posts.removeOne(req.params.id);
+		return res.redirect('/');
+	}
+);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => logger.log(`Listening on port ${PORT}`));

@@ -64,6 +64,8 @@
 	</div>
 	</main>
 
-	<button type="submit">Uložit</button>
+	<% if(user.role == 'admin') { %>
+		<button type="submit">Uložit</button>
+	<% } %>
 </form>
 <% } %> <%- include('partials/footer') %>

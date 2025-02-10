@@ -9,12 +9,43 @@
 			<a href="<%= data.url %>" class="visit-button" target="_blank"
 				>Zjistit více!</a
 			>
+			<% if (user) { %>
+			<a href="/odstranit/<%= data.id %>" class="visit-button"
+				>Odstranit příspěvek</a
+			>
+			<% } %>
 		</div>
-		<img src="<%= data.image %>" alt="Post image" />
+		<div>
+			<img
+				alt="Post image"
+				id="postImage"
+				style="max-height: 60vh; max-width: 40vw" />
+			<p id="imageIndex"></p>
+		</div>
 	</div>
 	<% } else { %>
 	<p style="color: red">Příspěvek nebyl nalezen.</p>
 	<% } %>
 </div>
+
+<script>
+	const images = [
+		<% data.images.forEach(img => { %>
+		"<%= img %>",
+			<% }) %>
+		];
+
+	const image = document.querySelector('img#postImage');
+	const imgIndex = document.querySelector('p#imageIndex');
+	let imgOrder = 0;
+	image.src = images[imgOrder];
+	imgIndex.textContent = 'Obrázek '+(imgOrder+1)+' z '+images.length;
+	image.addEventListener('click', () => {
+		imgOrder = (imgOrder + 1) % images.length;
+		image.src = images[imgOrder];
+		imgIndex.textContent = 'Obrázek '+(imgOrder+1)+' z '+images.length;
+
+	});
+</script>
 
 <%- include('partials/footer') %>

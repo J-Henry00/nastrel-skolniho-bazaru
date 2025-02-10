@@ -41,7 +41,12 @@ function authorizeUser(name, password) {
 	return password == pw.decrypt(user.pw);
 }
 
+function getUser(name) {
+	return db.find((user) => user.name == name);
+}
+
 module.exports = {
 	addUser,
 	authorizeUser,
+	getUser,
 };
